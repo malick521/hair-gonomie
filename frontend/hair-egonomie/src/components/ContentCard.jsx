@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 import NextButton from './NextButton';
 
 const ContentCard = ({ content, onNext, onComplete }) => {
@@ -55,8 +55,8 @@ const ContentCard = ({ content, onNext, onComplete }) => {
     switch (contentType) {
       case 'article':
         return '📄';
-      case 'video':
-        return '🎥';
+      case 'exemple':
+        return '💡';
       case 'exercise':
         return '✏️';
       default:
@@ -83,7 +83,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
       }}
     >
       {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      <TradingBackground />
       
       {/* Overlay élégant */}
       <div
@@ -126,7 +126,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
               boxShadow: `
                 0 20px 60px rgba(0, 0, 0, 0.5),
                 0 8px 32px rgba(236, 72, 153, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                inset 0 1px 0 rgba(236, 72, 153, 0.15)
               `,
               border: '1px solid rgba(236, 72, 153, 0.2)',
             }}
@@ -175,7 +175,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                   }}
                 >
                   {content.contentType === 'article' ? 'Article' : 
-                   content.contentType === 'video' ? 'Vidéo' : 'Exercice'}
+                   content.contentType === 'exemple' ? 'Exemple' : 'Exercice'}
                 </motion.span>
                 <motion.h1
                   initial={{ opacity: 0, y: 10 }}
@@ -208,7 +208,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                 style={{
                   fontSize: '1.125rem',
                   lineHeight: 1.8,
-                  color: 'rgba(255, 255, 255, 0.9)',
+                  color: 'rgba(236, 72, 153, 0.9)',
                 }}
                 dangerouslySetInnerHTML={{ __html: content.content }}
               />

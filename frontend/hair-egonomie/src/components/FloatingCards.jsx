@@ -30,24 +30,24 @@ const FloatingCards = () => {
     },
     {
       id: 3,
-      width: 260,
+      width: 190,
       height: 165,
-      y: '8%',      // Même couloir haut
+      y: '8%',      
       rotation: -8,
-      delay: 10,    // Délai encore plus important
+      delay: 10,    
       depth: 3,
       speed: 14,
       direction: 'left-to-right',
     },
   ];
 
-  // Couloir 2 : Milieu-haut - mouvement de droite à gauche uniquement
-  const middleTopLaneCards = [
+  // Couloir 2 : Très bas - mouvement de droite à gauche uniquement
+  const rightToLeftBottomCards = [
     {
       id: 4,
       width: 290,
       height: 180,
-      y: '25%',      // Couloir milieu-haut - espacement augmenté
+      y: '80%',      // Très bas - cartes venant de droite
       rotation: 22,
       delay: 1,
       depth: 4,
@@ -58,7 +58,7 @@ const FloatingCards = () => {
       id: 5,
       width: 275,
       height: 172,
-      y: '25%',      // Même couloir
+      y: '88%',      // Très bas - espacement
       rotation: -15,
       delay: 6,      // Délai important
       depth: 5,
@@ -69,7 +69,7 @@ const FloatingCards = () => {
       id: 6,
       width: 285,
       height: 178,
-      y: '25%',      // Même couloir
+      y: '95%',      // Très bas - espacement
       rotation: 20,
       delay: 11,     // Délai important
       depth: 6,
@@ -115,13 +115,13 @@ const FloatingCards = () => {
     },
   ];
 
-  // Couloir 4 : Milieu-bas - mouvement de droite à gauche uniquement
-  const middleBottomLaneCards = [
+  // Couloir 4 : Très bas - mouvement de droite à gauche uniquement
+  const rightToLeftVeryBottomCards = [
     {
       id: 10,
       width: 280,
       height: 175,
-      y: '65%',      // Couloir milieu-bas - espacement augmenté
+      y: '82%',      // Très bas - cartes venant de droite
       rotation: 15,
       delay: 1.5,
       depth: 10,
@@ -132,7 +132,7 @@ const FloatingCards = () => {
       id: 11,
       width: 290,
       height: 182,
-      y: '65%',      // Même couloir
+      y: '90%',      // Très bas - espacement
       rotation: -22,
       delay: 6.5,    // Délai important
       depth: 11,
@@ -143,7 +143,7 @@ const FloatingCards = () => {
       id: 12,
       width: 275,
       height: 172,
-      y: '65%',      // Même couloir
+      y: '97%',      // Très bas - espacement
       rotation: 12,
       delay: 11.5,   // Délai important
       depth: 12,
@@ -192,9 +192,9 @@ const FloatingCards = () => {
   // Combiner toutes les cartes par couloirs
   const cards = [
     ...topLaneCards,
-    ...middleTopLaneCards,
+    ...rightToLeftBottomCards,
     ...centerLaneCards,
-    ...middleBottomLaneCards,
+    ...rightToLeftVeryBottomCards,
     ...bottomLaneCards,
   ];
 
@@ -347,7 +347,7 @@ const FloatingCards = () => {
                 0 25px 70px rgba(236, 72, 153, ${glowOpacity}),
                 0 12px 35px rgba(236, 72, 153, ${glowOpacity * 0.8}),
                 0 0 0 1px rgba(236, 72, 153, ${borderOpacity * 0.5}),
-                inset 0 3px 10px rgba(255, 255, 255, 0.35),
+                inset 0 3px 10px rgba(236, 72, 153, 0.15),
                 inset 0 -3px 10px rgba(0, 0, 0, 0.5)
               `,
               transform: 'translate(-50%, -50%)',
@@ -373,7 +373,7 @@ const FloatingCards = () => {
                 left: '10%',
                 width: '80%',
                 height: '80%',
-                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(236, 72, 153, 0.3) 40%, transparent 75%)',
+                background: 'radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, rgba(236, 72, 153, 0.15) 40%, transparent 75%)',
                 borderRadius: '50%',
                 filter: 'blur(45px)',
                 pointerEvents: 'none',
@@ -396,7 +396,7 @@ const FloatingCards = () => {
                 left: '10%',
                 right: '10%',
                 height: '40%',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
+                background: 'linear-gradient(180deg, rgba(236, 72, 153, 0.2) 0%, transparent 100%)',
                 borderRadius: '28px 28px 0 0',
                 pointerEvents: 'none',
               }}

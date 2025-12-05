@@ -91,7 +91,7 @@ const MicroFeedback = ({ type, message, onDismiss }) => {
           <span
             style={{
               fontSize: '0.875rem',
-              color: 'rgba(255, 255, 255, 0.9)',
+              color: 'rgba(236, 72, 153, 0.9)',
               fontWeight: 500,
             }}
           >

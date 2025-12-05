@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 import NextButton from './NextButton';
 
 const CompletionScreen = ({ mode, journeyStats, onRestart, onContinue }) => {
@@ -66,8 +66,8 @@ const CompletionScreen = ({ mode, journeyStats, onRestart, onContinue }) => {
         overflow: 'hidden',
       }}
     >
-      {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      {/* Background animé */}
+      <TradingBackground />
       
       {/* Overlay élégant */}
       <div
@@ -107,7 +107,7 @@ const CompletionScreen = ({ mode, journeyStats, onRestart, onContinue }) => {
             boxShadow: `
               0 20px 60px rgba(0, 0, 0, 0.5),
               0 8px 32px rgba(236, 72, 153, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1)
+              inset 0 1px 0 rgba(236, 72, 153, 0.15)
             `,
             border: '1px solid rgba(236, 72, 153, 0.2)',
             textAlign: 'center',

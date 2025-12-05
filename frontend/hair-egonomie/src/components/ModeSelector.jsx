@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 
 const ModeSelector = ({ onSelect }) => {
   const modes = [
@@ -44,8 +44,8 @@ const ModeSelector = ({ onSelect }) => {
         overflow: 'hidden',
       }}
     >
-      {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      {/* Background animé */}
+      <TradingBackground />
       
       {/* Overlay élégant */}
       <div

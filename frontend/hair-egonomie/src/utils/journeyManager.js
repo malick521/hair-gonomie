@@ -15,7 +15,7 @@ export const JOURNEY_CONFIG = {
   "Apprendre": {
     steps: [
       { type: "question", id: "ux-ui", question: "Quelle est la différence entre UX et UI design ?" },
-      { type: "content", id: "video1", contentType: "video", title: "UX vs UI : comprendre les différences" },
+      { type: "content", id: "article1b", contentType: "article", title: "UX vs UI : comprendre les différences" },
       { type: "question", id: "guided", question: "Comment le parcours guidé réduit-il la friction utilisateur ?" },
       { type: "content", id: "article4", contentType: "article", title: "Les parcours guidés : réduire la friction" },
       { type: "question", id: "single-action", question: "Pourquoi limiter les choix à une seule action à la fois ?" },
@@ -126,7 +126,7 @@ export const CONTENT_DATA = {
       <p>Vous expérimentez ce principe : à chaque moment, un seul élément est visible et actionnable, créant un sentiment de clarté et de contrôle.</p>
     `
   },
-  video1: {
+  article1b: {
     title: "UX vs UI : comprendre les différences",
     content: `
       <h2>UX Design vs UI Design</h2>

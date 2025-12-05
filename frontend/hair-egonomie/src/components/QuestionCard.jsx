@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 
 // Questions de démonstration selon le mode sélectionné
 const DEMO_QUESTIONS = {
@@ -159,7 +159,7 @@ const QuestionCard = ({ mode, onComplete }) => {
       }}
     >
       {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      <TradingBackground />
       
       {/* Overlay élégant */}
       <div
@@ -232,7 +232,7 @@ const QuestionCard = ({ mode, onComplete }) => {
               boxShadow: `
                 0 20px 60px rgba(0, 0, 0, 0.5),
                 0 8px 32px rgba(236, 72, 153, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                inset 0 1px 0 rgba(236, 72, 153, 0.15)
               `,
               border: '1px solid rgba(236, 72, 153, 0.2)',
             }}

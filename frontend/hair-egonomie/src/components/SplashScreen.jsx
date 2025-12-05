@@ -14,8 +14,8 @@ const SplashScreen = ({ next }) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
       style={{
         position: 'fixed',
         top: 0,
@@ -28,7 +28,8 @@ const SplashScreen = ({ next }) => {
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 40%, #0f0f0f 100%)',
         overflow: 'hidden',
-        zIndex: 9999
+        zIndex: 10000,
+        pointerEvents: 'auto'
       }}
     >
       {/* Effet de lumière rose en arrière-plan */}
@@ -98,11 +99,19 @@ const SplashScreen = ({ next }) => {
         <motion.h1
           animate={{
             scale: [1, 1.05, 1],
+            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
           }}
           transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
+            scale: {
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            backgroundPosition: {
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear",
+            },
           }}
           style={{
             fontSize: 'clamp(2.5rem, 8vw, 5rem)',
@@ -115,14 +124,6 @@ const SplashScreen = ({ next }) => {
             marginBottom: '1.5rem',
             letterSpacing: '-0.03em',
             filter: 'drop-shadow(0 0 30px rgba(236, 72, 153, 0.5))',
-          }}
-          animate={{
-            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "linear",
           }}
         >
           Hair-Gonomie

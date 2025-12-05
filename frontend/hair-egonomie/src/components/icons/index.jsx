@@ -75,10 +75,10 @@ export const IconBook = ({ size = 24, color = 'currentColor' }) => (
   </svg>
 );
 
-export const IconVideo = ({ size = 24, color = 'currentColor' }) => (
+export const IconEye = ({ size = 24, color = 'currentColor' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 13l6-4v10l-6-4z"/>
-    <rect x="2" y="6" width="14" height="12" rx="2"/>
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
   </svg>
 );
 

@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserState } from '../hooks/useUserState';
 import { calculateNavigationOrder, shouldShowItem } from '../utils/navigationAlgorithm';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 import { IconDiscover, IconLearn, IconPractice, IconStar, IconArrowRight, IconSparkles } from './icons';
 
 const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
   const { userState, trackHoverStart, trackHoverEnd, trackClick } = useUserState();
+  const buttonRefs = useRef([]);
+  const recommendationRefs = useRef([]);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [focusedRecIndex, setFocusedRecIndex] = useState(-1);
 
   // Configuration des options de navigation avec métadonnées
   const [availableItems] = useState([
@@ -60,19 +64,102 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
     recommendationReason: recommendations.find((rec) => rec.id === item.id)?.reason,
   }));
 
-  const handleItemClick = (item) => {
+  const handleItemClick = useCallback((item) => {
     trackClick(item.id, { type: item.type });
     onSelect(item.label);
-  };
+  }, [trackClick, onSelect]);
 
-  const handleRecommendationClick = (item) => {
+  const handleRecommendationClick = useCallback((item) => {
     trackClick(item.id, { type: 'recommendation', reason: item.recommendationReason });
     if (onRecommendationClick) {
       onRecommendationClick(item);
     } else {
       onSelect(item.label);
     }
-  };
+  }, [trackClick, onSelect, onRecommendationClick]);
+
+  // Navigation clavier
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Tab : navigation entre les éléments
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        
+        if (e.shiftKey) {
+          // Shift+Tab : navigation arrière
+          if (focusedIndex > 0) {
+            setFocusedIndex(focusedIndex - 1);
+            buttonRefs.current[focusedIndex - 1]?.focus();
+          } else if (focusedRecIndex > 0) {
+            setFocusedRecIndex(focusedRecIndex - 1);
+            recommendationRefs.current[focusedRecIndex - 1]?.focus();
+          } else if (focusedRecIndex === 0 && buttonRefs.current.length > 0) {
+            setFocusedRecIndex(-1);
+            setFocusedIndex(buttonRefs.current.length - 1);
+            buttonRefs.current[buttonRefs.current.length - 1]?.focus();
+          }
+        } else {
+          // Tab : navigation avant
+          if (focusedIndex < buttonRefs.current.length - 1) {
+            setFocusedIndex(focusedIndex + 1);
+            buttonRefs.current[focusedIndex + 1]?.focus();
+          } else if (focusedRecIndex < recommendationRefs.current.length - 1) {
+            setFocusedRecIndex(focusedRecIndex + 1);
+            recommendationRefs.current[focusedRecIndex + 1]?.focus();
+          } else if (focusedIndex === buttonRefs.current.length - 1 && recommendationRefs.current.length > 0) {
+            setFocusedIndex(-1);
+            setFocusedRecIndex(0);
+            recommendationRefs.current[0]?.focus();
+          } else if (focusedIndex === -1 && focusedRecIndex === -1 && buttonRefs.current.length > 0) {
+            setFocusedIndex(0);
+            buttonRefs.current[0]?.focus();
+          }
+        }
+      }
+      
+      // Enter ou Espace : activer l'élément focusé
+      if ((e.key === 'Enter' || e.key === ' ') && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        if (focusedIndex >= 0 && buttonRefs.current[focusedIndex]) {
+          handleItemClick(itemsWithRecommendations[focusedIndex]);
+        } else if (focusedRecIndex >= 0 && recommendationRefs.current[focusedRecIndex]) {
+          const rec = recommendations[focusedRecIndex];
+          const item = availableItems.find((i) => i.id === rec.id);
+          handleRecommendationClick({ ...item, recommendationReason: rec.reason });
+        }
+      }
+      
+      // Flèches : navigation verticale
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (e.key === 'ArrowDown') {
+          if (focusedIndex < buttonRefs.current.length - 1) {
+            setFocusedIndex(focusedIndex + 1);
+            buttonRefs.current[focusedIndex + 1]?.focus();
+          } else if (recommendationRefs.current.length > 0 && focusedRecIndex < recommendationRefs.current.length - 1) {
+            setFocusedIndex(-1);
+            setFocusedRecIndex(0);
+            recommendationRefs.current[0]?.focus();
+          }
+        } else {
+          if (focusedRecIndex > 0) {
+            setFocusedRecIndex(focusedRecIndex - 1);
+            recommendationRefs.current[focusedRecIndex - 1]?.focus();
+          } else if (focusedRecIndex === 0 && buttonRefs.current.length > 0) {
+            setFocusedRecIndex(-1);
+            setFocusedIndex(buttonRefs.current.length - 1);
+            buttonRefs.current[buttonRefs.current.length - 1]?.focus();
+          } else if (focusedIndex > 0) {
+            setFocusedIndex(focusedIndex - 1);
+            buttonRefs.current[focusedIndex - 1]?.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [focusedIndex, focusedRecIndex, itemsWithRecommendations, recommendations, availableItems, handleItemClick, handleRecommendationClick]);
 
   return (
     <motion.div
@@ -92,8 +179,8 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
         overflow: 'hidden',
       }}
     >
-      {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      {/* Background animé */}
+      <TradingBackground />
 
       {/* Overlay élégant */}
       <div
@@ -112,72 +199,220 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
         }}
       />
 
-      {/* Conteneur principal avec layout flex */}
+      {/* Conteneur principal centré */}
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           width: '100%',
-          maxWidth: '1400px',
-          gap: '3rem',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
+          maxWidth: '600px',
+          alignItems: 'center',
           position: 'relative',
           zIndex: 10,
           padding: '0 2rem',
         }}
       >
-        {/* Colonne gauche : Titre et Options */}
-        <div
+        {/* Titre */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           style={{
-            flex: 1,
-            maxWidth: '600px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            width: '100%',
+            textAlign: 'center',
+            marginBottom: '4rem',
           }}
         >
-          {/* Titre */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ delay: 0.2, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
             style={{
-              width: '100%',
-              textAlign: 'center',
-              marginBottom: '4rem',
+              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontWeight: 700,
+              color: '#ec4899',
+              marginBottom: '1rem',
+              letterSpacing: '-0.02em',
+              textShadow: '0 5px 20px rgba(236, 72, 153, 0.4)',
             }}
           >
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-              style={{
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 700,
-                color: '#ec4899',
-                marginBottom: '1rem',
-                letterSpacing: '-0.02em',
-                textShadow: '0 5px 20px rgba(236, 72, 153, 0.4)',
-              }}
-            >
-              Que voulez-vous faire aujourd'hui ?
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-              style={{
-                fontSize: '1.125rem',
-                color: '#ec4899',
-                fontWeight: 400,
-                opacity: 0.9,
-              }}
-            >
-              Navigation adaptée à vos besoins
-            </motion.p>
-          </motion.div>
+            Que voulez-vous faire aujourd'hui ?
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              fontSize: '1.125rem',
+              color: '#ec4899',
+              fontWeight: 400,
+              opacity: 0.9,
+            }}
+          >
+            Navigation adaptée à vos besoins
+          </motion.p>
+        </motion.div>
 
-          {/* Options de navigation ordonnées intelligemment */}
+        {/* Bloc de recommandations - en haut des boutons */}
+        {recommendations.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.5,
+              duration: 0.7,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              marginBottom: '2rem',
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+              style={{
+                background: 'rgba(236, 72, 153, 0.08)',
+                border: '2px solid rgba(236, 72, 153, 0.25)',
+                borderRadius: '1.25rem',
+                padding: '1rem',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                boxShadow: '0 20px 60px -12px rgba(236, 72, 153, 0.3)',
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.875rem',
+                }}
+              >
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                >
+                  <IconSparkles size={18} color="#ec4899" />
+                </motion.div>
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: '#ec4899',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                  }}
+                >
+                  Recommandation
+                </span>
+              </motion.div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {recommendations.map((rec, index) => {
+                  const item = availableItems.find((i) => i.id === rec.id);
+                  return (
+                    <motion.button
+                      key={rec.id}
+                      ref={(el) => (recommendationRefs.current[index] = el)}
+                      tabIndex={0}
+                      onFocus={() => setFocusedRecIndex(index)}
+                      onBlur={() => {
+                        if (document.activeElement !== recommendationRefs.current[index]) {
+                          setFocusedRecIndex(-1);
+                        }
+                      }}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        delay: 0.8 + index * 0.15,
+                        duration: 0.5,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                      whileHover={{
+                        scale: 1.02,
+                        x: 3,
+                        transition: { duration: 0.2 },
+                      }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleRecommendationClick({ ...item, recommendationReason: rec.reason })}
+                      style={{
+                        width: '100%',
+                        padding: '0.625rem 0.875rem',
+                        background: 'rgba(236, 72, 153, 0.15)',
+                        border: '1.5px solid rgba(236, 72, 153, 0.4)',
+                        borderRadius: '0.75rem',
+                        color: 'white',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.375rem',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 6px 20px -4px rgba(236, 72, 153, 0.2)',
+                      }}
+                    >
+                      {/* Effet de brillance au survol */}
+                      <motion.div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: '-100%',
+                          width: '100%',
+                          height: '100%',
+                          background: 'linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.15), transparent)',
+                        }}
+                        whileHover={{ left: '100%' }}
+                        transition={{ duration: 0.6 }}
+                      />
+
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          {item?.IconComponent && (
+                            <motion.div
+                              whileHover={{ rotate: 15, scale: 1.1 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <item.IconComponent size={16} color="#ec4899" />
+                            </motion.div>
+                          )}
+                          <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.8rem' }}>
+                            {item?.label}
+                          </div>
+                        </div>
+                        <motion.div
+                          animate={{ x: [0, 3, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                        >
+                          <IconArrowRight size={15} color="#ec4899" />
+                        </motion.div>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'rgba(236, 72, 153, 0.75)',
+                          lineHeight: 1.4,
+                          paddingLeft: '2rem',
+                        }}
+                      >
+                        {rec.reason}
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Options de navigation ordonnées intelligemment */}
           <motion.div
             initial="hidden"
             animate="visible"
@@ -204,6 +439,14 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
           {itemsWithRecommendations.map((item, index) => (
             <motion.button
               key={item.id}
+              ref={(el) => (buttonRefs.current[index] = el)}
+              tabIndex={0}
+              onFocus={() => setFocusedIndex(index)}
+              onBlur={() => {
+                if (document.activeElement !== buttonRefs.current[index]) {
+                  setFocusedIndex(-1);
+                }
+              }}
               variants={{
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: {
@@ -345,161 +588,6 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
           ))}
         </AnimatePresence>
           </motion.div>
-        </div>
-
-        {/* Colonne droite : Recommandations */}
-        {recommendations.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, x: 100, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{
-              delay: 0.6,
-              duration: 0.9,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
-            style={{
-              flex: '0 0 auto',
-              width: '280px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              paddingTop: '9.5rem', // Aligné avec le début des cartes (hauteur h1 ~3rem + margin h1 1rem + hauteur p ~1.5rem + marginBottom conteneur 4rem)
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-              style={{
-                background: 'rgba(236, 72, 153, 0.08)',
-                border: '2px solid rgba(236, 72, 153, 0.25)',
-                borderRadius: '1.25rem',
-                padding: '1rem',
-                backdropFilter: 'blur(20px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                boxShadow: '0 20px 60px -12px rgba(236, 72, 153, 0.3)',
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9, duration: 0.4 }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  marginBottom: '0.875rem',
-                }}
-              >
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                >
-                  <IconSparkles size={18} color="#ec4899" />
-                </motion.div>
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    color: '#ec4899',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  Recommandation
-                </span>
-              </motion.div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {recommendations.map((rec, index) => {
-                  const item = availableItems.find((i) => i.id === rec.id);
-                  return (
-                    <motion.button
-                      key={rec.id}
-                      initial={{ opacity: 0, x: 30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        delay: 1 + index * 0.15,
-                        duration: 0.5,
-                        ease: [0.4, 0, 0.2, 1],
-                      }}
-                      whileHover={{
-                        scale: 1.02,
-                        x: 3,
-                        transition: { duration: 0.2 },
-                      }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => handleRecommendationClick({ ...item, recommendationReason: rec.reason })}
-                      style={{
-                        width: '100%',
-                        padding: '0.625rem 0.875rem',
-                        background: 'rgba(236, 72, 153, 0.15)',
-                        border: '1.5px solid rgba(236, 72, 153, 0.4)',
-                        borderRadius: '0.75rem',
-                        color: 'white',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.375rem',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        transition: 'all 0.3s ease',
-                        boxShadow: '0 6px 20px -4px rgba(236, 72, 153, 0.2)',
-                      }}
-                    >
-                      {/* Effet de brillance au survol */}
-                      <motion.div
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: '-100%',
-                          width: '100%',
-                          height: '100%',
-                          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
-                        }}
-                        whileHover={{ left: '100%' }}
-                        transition={{ duration: 0.6 }}
-                      />
-
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          {item?.IconComponent && (
-                            <motion.div
-                              whileHover={{ rotate: 15, scale: 1.1 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <item.IconComponent size={16} color="#ec4899" />
-                            </motion.div>
-                          )}
-                          <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.8rem' }}>
-                            {item?.label}
-                          </div>
-                        </div>
-                        <motion.div
-                          animate={{ x: [0, 3, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                          <IconArrowRight size={14} color="#ec4899" />
-                        </motion.div>
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.7rem',
-                          color: 'rgba(255, 255, 255, 0.75)',
-                          lineHeight: 1.4,
-                          paddingLeft: '2rem',
-                        }}
-                      >
-                        {rec.reason}
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
       </div>
 
       {/* Indicateur d'état mental (optionnel, pour debug) */}

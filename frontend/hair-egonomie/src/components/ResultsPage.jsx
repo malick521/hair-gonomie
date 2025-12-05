@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 
 const ResultsPage = ({ mode, onRestart, totalQuestions, completedQuestions }) => {
   const completionPercentage = totalQuestions > 0 
@@ -25,7 +25,7 @@ const ResultsPage = ({ mode, onRestart, totalQuestions, completedQuestions }) =>
       }}
     >
       {/* Cartes flottantes en arrière-plan */}
-      <FloatingCards />
+      <TradingBackground />
 
       {/* Overlay élégant */}
       <div

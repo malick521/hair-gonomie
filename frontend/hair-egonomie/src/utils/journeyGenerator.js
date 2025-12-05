@@ -9,7 +9,6 @@ export const generateJourney = (answers) => {
   // Modules de base disponibles
   const modules = {
     article: { type: 'article', label: 'Article', icon: '📖', duration: '5-10 min' },
-    video: { type: 'video', label: 'Vidéo', icon: '🎬', duration: '3-5 min' },
     exercice: { type: 'exercice', label: 'Exercice', icon: '💪', duration: '10-15 min' },
     exemple: { type: 'exemple', label: 'Exemple', icon: '💡', duration: '2-3 min' },
     resume: { type: 'resume', label: 'Résumé', icon: '📝', duration: '2-5 min' },
@@ -21,38 +20,38 @@ export const generateJourney = (answers) => {
   if (intention === 'comprendre') {
     // Intention : Comprendre
     if (style === 'exemples') {
-      journey = [modules.article, modules.exemple, modules.video, modules.exercice];
+      journey = [modules.article, modules.exemple, modules.exercice];
     } else if (style === 'explications') {
-      journey = [modules.article, modules.resume, modules.video, modules.exercice];
-    } else if (style === 'videos') {
-      journey = [modules.video, modules.article, modules.exemple, modules.exercice];
+      journey = [modules.article, modules.resume, modules.exercice];
+    } else if (style === 'visuel') {
+      journey = [modules.exemple, modules.article, modules.exercice];
     } else {
       // pratique
-      journey = [modules.article, modules.exercice, modules.video, modules.exemple];
+      journey = [modules.article, modules.exercice, modules.exemple];
     }
   } else if (intention === 'voir') {
-    // Intention : Voir
-    journey = [modules.video, modules.resume, modules.exemple, modules.exercice];
+    // Intention : Voir (remplacé par Explorer visuellement)
+    journey = [modules.exemple, modules.resume, modules.exercice];
     
     if (style === 'pratique') {
-      journey = [modules.video, modules.exercice, modules.resume, modules.exemple];
+      journey = [modules.exemple, modules.exercice, modules.resume];
     }
   } else if (intention === 'pratiquer') {
     // Intention : Pratiquer
-    journey = [modules.exercice, modules.article, modules.video, modules.exemple];
+    journey = [modules.exercice, modules.article, modules.exemple];
     
     if (style === 'explications') {
-      journey = [modules.exercice, modules.resume, modules.article, modules.video];
+      journey = [modules.exercice, modules.resume, modules.article];
     }
   } else {
     // Intention : Explorer
     // Mélange progressif selon le niveau
     if (level === 'debutant') {
-      journey = [modules.video, modules.article, modules.exemple, modules.exercice];
+      journey = [modules.exemple, modules.article, modules.exercice];
     } else if (level === 'intermediaire') {
-      journey = [modules.article, modules.video, modules.exercice, modules.exemple];
+      journey = [modules.article, modules.exemple, modules.exercice];
     } else {
-      journey = [modules.exercice, modules.exemple, modules.article, modules.video];
+      journey = [modules.exercice, modules.exemple, modules.article];
     }
   }
 
@@ -71,8 +70,8 @@ export const generateJourney = (answers) => {
   if (style === 'exemples' && !journey.find((m) => m.type === 'exemple')) {
     journey.splice(1, 0, modules.exemple);
   }
-  if (style === 'videos' && !journey.find((m) => m.type === 'video')) {
-    journey.unshift(modules.video);
+  if (style === 'visuel' && !journey.find((m) => m.type === 'exemple')) {
+    journey.unshift(modules.exemple);
   }
   if (style === 'pratique' && !journey.find((m) => m.type === 'exercice')) {
     journey.unshift(modules.exercice);

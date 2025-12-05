@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 
 const PersonalizedJourney = ({ journey, onStart }) => {
   return (
@@ -21,7 +21,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
       }}
     >
       {/* Cartes flottantes */}
-      <FloatingCards />
+      <TradingBackground />
 
       {/* Overlay */}
       <div
@@ -75,7 +75,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
           transition={{ delay: 0.6 }}
           style={{
             fontSize: '1.125rem',
-            color: 'rgba(255, 255, 255, 0.8)',
+            color: 'rgba(236, 72, 153, 0.85)',
             marginBottom: '3rem',
           }}
         >
@@ -155,7 +155,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
                   <div
                     style={{
                       fontSize: '0.875rem',
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'rgba(236, 72, 153, 0.75)',
                     }}
                   >
                     Durée estimée : {module.duration}

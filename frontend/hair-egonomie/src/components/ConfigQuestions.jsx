@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import FloatingCards from './FloatingCards';
+import TradingBackground from './TradingBackground';
 import { 
   IconTrendingUp, IconUser, IconZap, IconWaves, IconZap as IconLightning,
-  IconBot, IconBook, IconVideo, IconTarget, IconMap, IconLightbulb, IconFileText
+  IconBot, IconBook, IconTarget, IconMap, IconLightbulb, IconFileText, IconEye
 } from './icons';
 
 // Mapping des icônes pour chaque option
@@ -16,8 +16,8 @@ const getIconForOption = (questionId, optionId) => {
     },
     intention: {
       comprendre: IconBook,
-      voir: IconVideo,
-      pratiquer: IconPractice,
+      voir: IconEye,
+      pratiquer: IconTarget,
       explorer: IconMap,
     },
     rythme: {
@@ -28,7 +28,7 @@ const getIconForOption = (questionId, optionId) => {
     style: {
       exemples: IconLightbulb,
       explications: IconFileText,
-      videos: IconVideo,
+      visuel: IconEye,
       pratique: IconTarget,
     },
   };
@@ -51,7 +51,7 @@ const CONFIG_QUESTIONS = [
     question: "Qu'est-ce que tu veux faire maintenant ?",
     options: [
       { id: 'comprendre', label: 'Comprendre', description: 'Lecture, théorie' },
-      { id: 'voir', label: 'Voir', description: 'Vidéo rapide' },
+      { id: 'voir', label: 'Voir', description: 'Exemples visuels' },
       { id: 'pratiquer', label: 'Pratiquer', description: 'Exercice' },
       { id: 'explorer', label: 'Explorer', description: 'Parcours guidé' },
     ],
@@ -73,7 +73,7 @@ const CONFIG_QUESTIONS = [
     options: [
       { id: 'exemples', label: 'Des exemples', description: 'Cas concrets' },
       { id: 'explications', label: 'Des explications simples', description: 'Théorie claire' },
-      { id: 'videos', label: 'De courtes vidéos', description: 'Format visuel' },
+      { id: 'visuel', label: 'Format visuel', description: 'Exemples illustrés' },
       { id: 'pratique', label: 'De la pratique directe', description: 'Exercices immédiats' },
     ],
     reason: 'Change l\'ordre d\'affichage selon les préférences cognitives',
@@ -136,7 +136,7 @@ const ConfigQuestions = ({ onComplete }) => {
       }}
     >
       {/* Cartes flottantes */}
-      <FloatingCards />
+      <TradingBackground />
 
       {/* Overlay */}
       <div
@@ -224,7 +224,7 @@ const ConfigQuestions = ({ onComplete }) => {
               <p
                 style={{
                   fontSize: '0.875rem',
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'rgba(236, 72, 153, 0.7)',
                   fontStyle: 'italic',
                 }}
               >
@@ -373,7 +373,7 @@ const ConfigQuestions = ({ onComplete }) => {
                       <p
                         style={{
                           fontSize: '0.875rem',
-                          color: 'rgba(255, 255, 255, 0.9)',
+                          color: 'rgba(236, 72, 153, 0.9)',
                           textAlign: 'center',
                           lineHeight: 1.6,
                         }}
@@ -401,9 +401,9 @@ const getLogicDescription = (questionId, optionId) => {
       avance: 'Contenu approfondi, concepts avancés, défis stimulants',
     },
     intention: {
-      comprendre: 'Ordre : Article → Exemples → Vidéo → Exercice',
-      voir: 'Ordre : Vidéo → Mini explication → Exemple → Exercice',
-      pratiquer: 'Ordre : Exercice → Article → Vidéo → Exemple',
+      comprendre: 'Ordre : Article → Exemples → Exercice',
+      voir: 'Ordre : Exemples → Mini explication → Exercice',
+      pratiquer: 'Ordre : Exercice → Article → Exemple',
       explorer: 'Mélange progressif selon votre niveau',
     },
     rythme: {
@@ -414,7 +414,7 @@ const getLogicDescription = (questionId, optionId) => {
     style: {
       exemples: 'Priorité aux cas concrets et démonstrations pratiques',
       explications: 'Priorité aux articles et résumés théoriques clairs',
-      videos: 'Priorité aux formats vidéo courts et dynamiques',
+      visuel: 'Priorité aux exemples visuels et illustrations',
       pratique: 'Priorité aux exercices interactifs immédiats',
     },
   };
