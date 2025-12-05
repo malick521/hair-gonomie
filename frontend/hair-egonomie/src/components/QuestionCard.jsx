@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingBackground from './TradingBackground';
 
@@ -28,6 +28,10 @@ const QuestionCard = ({ mode, onComplete }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [timeRemaining, setTimeRemaining] = useState(AUTO_ADVANCE_DELAY);
+  const autoAdvanceTimerRef = useRef(null);
+  const countdownTimerRef = useRef(null);
+  const AUTO_ADVANCE_DELAY = 5000; // 5 secondes par question
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -45,21 +49,108 @@ const QuestionCard = ({ mode, onComplete }) => {
         }
       } catch {
         // Backend non disponible - continuer avec les questions de démo
+        console.log("Backend non disponible, utilisation des questions de démonstration");
       }
       
-      console.log("Utilisation des questions de démonstration");
-      setQuestions(DEMO_QUESTIONS[mode] || DEMO_QUESTIONS["Découvrir"]);
+      // Utiliser les questions de démo selon le mode
+      // Normaliser le mode pour correspondre aux clés de DEMO_QUESTIONS
+      let normalizedMode = mode;
+      if (mode && typeof mode === 'string') {
+        // Correspondance flexible pour les modes
+        const modeLower = mode.toLowerCase();
+        if (modeLower.includes("découvrir") || modeLower.includes("decouvrir")) {
+          normalizedMode = "Découvrir";
+        } else if (modeLower.includes("apprendre")) {
+          normalizedMode = "Apprendre";
+        } else if (modeLower.includes("exercer") || modeLower.includes("s'exercer")) {
+          normalizedMode = "S'exercer";
+        } else if (mode === "Découvrir" || mode === "Apprendre" || mode === "S'exercer") {
+          // Mode déjà correct
+          normalizedMode = mode;
+        } else {
+          // Mode non reconnu, utiliser "Découvrir" par défaut
+          normalizedMode = "Découvrir";
+        }
+      } else {
+        // Mode null ou undefined, utiliser "Découvrir" par défaut
+        normalizedMode = "Découvrir";
+      }
+      
+      // Utiliser le mode normalisé ou "Découvrir" par défaut
+      const demoQuestions = DEMO_QUESTIONS[normalizedMode] || DEMO_QUESTIONS["Découvrir"];
+      console.log("Utilisation des questions de démonstration pour le mode:", normalizedMode);
+      setQuestions(demoQuestions);
       setIsLoading(false);
     };
 
     loadQuestions();
   }, [mode]);
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+  const handleNext = useCallback(() => {
+    setCurrentQuestionIndex((prevIndex) => {
+      if (prevIndex < questions.length - 1) {
+        return prevIndex + 1;
+      } else {
+        // Dernière question terminée
+        if (onComplete) {
+          onComplete({
+            total: questions.length,
+            completed: questions.length,
+          });
+        }
+        return prevIndex;
+      }
+    });
+  }, [questions.length, onComplete]);
+
+  // Timer automatique pour avancer les questions
+  useEffect(() => {
+    if (questions.length === 0 || isLoading) return;
+
+    // Nettoyer les timers précédents
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
     }
-  };
+    if (countdownTimerRef.current) {
+      clearInterval(countdownTimerRef.current);
+    }
+
+    // Si c'est la dernière question, ne pas avancer automatiquement
+    if (currentQuestionIndex >= questions.length - 1) {
+      setTimeRemaining(0);
+      return;
+    }
+
+    // Réinitialiser le compte à rebours
+    setTimeRemaining(AUTO_ADVANCE_DELAY);
+
+    // Compte à rebours visuel
+    countdownTimerRef.current = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 100) {
+          return 0;
+        }
+        return prev - 100;
+      });
+    }, 100);
+
+    // Créer un nouveau timer pour la question suivante
+    autoAdvanceTimerRef.current = setTimeout(() => {
+      handleNext();
+    }, AUTO_ADVANCE_DELAY);
+
+    // Nettoyer les timers au démontage ou changement de question
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = null;
+      }
+      if (countdownTimerRef.current) {
+        clearInterval(countdownTimerRef.current);
+        countdownTimerRef.current = null;
+      }
+    };
+  }, [currentQuestionIndex, questions.length, isLoading, handleNext]);
 
   if (isLoading) {
     return (
@@ -152,7 +243,7 @@ const QuestionCard = ({ mode, onComplete }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
+        padding: 'clamp(1rem, 4vw, 2rem)',
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
         position: 'relative',
         overflow: 'hidden',
@@ -211,7 +302,7 @@ const QuestionCard = ({ mode, onComplete }) => {
       <div
         style={{
           width: '100%',
-          maxWidth: '700px',
+          maxWidth: 'min(700px, 95vw)',
           position: 'relative',
           zIndex: 10,
         }}
@@ -227,8 +318,8 @@ const QuestionCard = ({ mode, onComplete }) => {
               background: 'rgba(20, 20, 20, 0.7)',
               backdropFilter: 'blur(30px) saturate(180%)',
               WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-              borderRadius: '2rem',
-              padding: '3rem',
+              borderRadius: 'clamp(1rem, 4vw, 2rem)',
+              padding: 'clamp(1.5rem, 5vw, 3rem)',
               boxShadow: `
                 0 20px 60px rgba(0, 0, 0, 0.5),
                 0 8px 32px rgba(236, 72, 153, 0.2),
@@ -243,7 +334,9 @@ const QuestionCard = ({ mode, onComplete }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '2rem',
+                flexWrap: 'wrap',
+                gap: '1rem',
+                marginBottom: 'clamp(1rem, 3vw, 2rem)',
               }}
             >
               <motion.span
@@ -251,7 +344,7 @@ const QuestionCard = ({ mode, onComplete }) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
                 style={{
-                  fontSize: '0.875rem',
+                  fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
                   color: 'rgba(236, 72, 153, 0.7)',
                   fontWeight: 500,
                   textTransform: 'uppercase',
@@ -267,15 +360,16 @@ const QuestionCard = ({ mode, onComplete }) => {
                 transition={{ delay: 0.3 }}
                 style={{
                   display: 'flex',
-                  gap: '0.5rem',
+                  gap: 'clamp(0.25rem, 1vw, 0.5rem)',
+                  flexWrap: 'wrap',
                 }}
               >
                 {questions.map((_, index) => (
                   <div
                     key={index}
                     style={{
-                      width: '8px',
-                      height: '8px',
+                      width: 'clamp(6px, 1.5vw, 8px)',
+                      height: 'clamp(6px, 1.5vw, 8px)',
                       borderRadius: '50%',
                       background: index === currentQuestionIndex
                         ? '#ec4899'
@@ -301,7 +395,7 @@ const QuestionCard = ({ mode, onComplete }) => {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                marginBottom: '3rem',
+                marginBottom: 'clamp(1.5rem, 4vw, 3rem)',
                 lineHeight: 1.3,
                 letterSpacing: '-0.02em',
               }}
@@ -309,12 +403,43 @@ const QuestionCard = ({ mode, onComplete }) => {
               {currentQuestion}
             </motion.h2>
 
+            {/* Barre de progression automatique */}
+            {currentQuestionIndex < questions.length - 1 && (
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ delay: 0.3 }}
+                style={{
+                  width: '100%',
+                  height: '3px',
+                  background: 'rgba(236, 72, 153, 0.2)',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                  marginBottom: 'clamp(1rem, 3vw, 2rem)',
+                }}
+              >
+                <motion.div
+                  initial={{ scaleX: 1 }}
+                  animate={{ 
+                    scaleX: timeRemaining / AUTO_ADVANCE_DELAY,
+                  }}
+                  transition={{ duration: 0.1, ease: 'linear' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
+                    transformOrigin: 'left',
+                  }}
+                />
+              </motion.div>
+            )}
+
             {/* Bouton d'action */}
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginTop: '2rem',
+                marginTop: 'clamp(1rem, 3vw, 2rem)',
               }}
             >
               {currentQuestionIndex < questions.length - 1 ? (
@@ -329,24 +454,26 @@ const QuestionCard = ({ mode, onComplete }) => {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleNext}
                   style={{
-                    padding: '1rem 2rem',
-                    fontSize: '1rem',
+                    padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 2rem)',
+                    fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                     fontWeight: 600,
                     border: 'none',
-                    borderRadius: '0.75rem',
+                    borderRadius: 'clamp(0.5rem, 2vw, 0.75rem)',
                     background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
                     color: 'white',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem',
+                    gap: 'clamp(0.5rem, 1.5vw, 0.75rem)',
                     boxShadow: '0 8px 24px rgba(236, 72, 153, 0.4)',
+                    width: 'auto',
+                    minWidth: 'fit-content',
                   }}
                 >
                   <span>Suivant</span>
                   <motion.svg
-                    width="20"
-                    height="20"
+                    width="clamp(16px, 3vw, 20px)"
+                    height="clamp(16px, 3vw, 20px)"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -357,6 +484,7 @@ const QuestionCard = ({ mode, onComplete }) => {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
+                    style={{ flexShrink: 0 }}
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </motion.svg>
@@ -381,21 +509,23 @@ const QuestionCard = ({ mode, onComplete }) => {
                     }
                   }}
                   style={{
-                    padding: '1rem 2rem',
-                    fontSize: '1rem',
+                    padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 2rem)',
+                    fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                     fontWeight: 600,
                     border: 'none',
-                    borderRadius: '0.75rem',
+                    borderRadius: 'clamp(0.5rem, 2vw, 0.75rem)',
                     background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
                     color: 'white',
                     cursor: 'pointer',
                     boxShadow: '0 8px 24px rgba(236, 72, 153, 0.4)',
+                    width: 'auto',
+                    minWidth: 'fit-content',
                   }}
                 >
                   Voir les résultats
                 </motion.button>
-              )}
-            </div>
+      )}
+    </div>
           </motion.div>
         </AnimatePresence>
       </div>
