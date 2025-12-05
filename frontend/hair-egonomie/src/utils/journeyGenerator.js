@@ -3,15 +3,17 @@
  * Combine : Niveau + Intention + Rythme + Style d'apprentissage
  */
 
+import { IconArticle, IconExercise, IconExample, IconSummary } from '../components/icons';
+
 export const generateJourney = (answers) => {
   const { level, intention, rythme, style } = answers;
 
-  // Modules de base disponibles
+  // Modules de base disponibles avec icônes SVG
   const modules = {
-    article: { type: 'article', label: 'Article', icon: '📖', duration: '5-10 min' },
-    exercice: { type: 'exercice', label: 'Exercice', icon: '💪', duration: '10-15 min' },
-    exemple: { type: 'exemple', label: 'Exemple', icon: '💡', duration: '2-3 min' },
-    resume: { type: 'resume', label: 'Résumé', icon: '📝', duration: '2-5 min' },
+    article: { type: 'article', label: 'Article', icon: IconArticle, duration: '5-10 min' },
+    exercice: { type: 'exercice', label: 'Exercice', icon: IconExercise, duration: '10-15 min' },
+    exemple: { type: 'exemple', label: 'Exemple', icon: IconExample, duration: '2-3 min' },
+    resume: { type: 'resume', label: 'Résumé', icon: IconSummary, duration: '2-5 min' },
   };
 
   let journey = [];

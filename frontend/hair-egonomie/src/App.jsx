@@ -9,6 +9,8 @@ import IntelligentNavigation from './components/IntelligentNavigation'; // Navig
 import ConfigQuestions from './components/ConfigQuestions'; // Questions de configuration
 import PersonalizedJourney from './components/PersonalizedJourney'; // Parcours personnalisé
 import QuestionCard from './components/QuestionCard';
+import JourneyFlow from './components/JourneyFlow';
+
 import ResultsPage from './components/ResultsPage';
 import { generateJourney } from './utils/journeyGenerator';
 
@@ -38,7 +40,7 @@ function App() {
   };
 
   const handleJourneyStart = () => {
-    setStep("questions"); // Commencer avec les questions du parcours
+    setStep("journeyFlow"); // Commencer le parcours complet avec contenu et questions
   };
 
   return (
@@ -70,11 +72,11 @@ function App() {
           />
         )}
 
-        {step === "questions" && (
-          <QuestionCard 
-            key="questions" 
-            mode={mode}
+        {step === "journeyFlow" && personalizedJourney && (
+          <JourneyFlow
+            key="journeyFlow"
             journey={personalizedJourney}
+            mode={mode}
             onComplete={(stats) => {
               setQuestionStats(stats);
               setStep("results");

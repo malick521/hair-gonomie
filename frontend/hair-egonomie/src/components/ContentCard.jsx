@@ -1,22 +1,78 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import TradingBackground from './TradingBackground';
 import NextButton from './NextButton';
+import { IconArticle, IconExample, IconExercise, IconSummary, IconCheck } from './icons';
 
 const ContentCard = ({ content, onNext, onComplete }) => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [readingTime, setReadingTime] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const contentRef = useRef(null);
+  const autoScrollTimerRef = useRef(null);
 
   useEffect(() => {
+    // Scroll automatique vers le haut au chargement
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     // Timer pour estimer le temps de lecture
     const timer = setInterval(() => {
       setReadingTime(prev => prev + 1);
     }, 1000);
 
-    // Détecter le scroll pour savoir si l'utilisateur a lu
+    // Scroll automatique progressif pour aider l'utilisateur
+    const startAutoScroll = () => {
+      if (contentRef.current) {
+        const viewportHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        // Si le contenu dépasse la hauteur de l'écran, faire un scroll automatique
+        if (documentHeight > viewportHeight * 1.2) {
+          const scrollDuration = 6000; // 6 secondes pour scroller tout le contenu
+          const scrollDistance = documentHeight - viewportHeight + 100;
+          const startTime = Date.now();
+          const startScroll = window.scrollY || 0;
+
+          const scrollStep = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / scrollDuration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3); // Easing cubic
+
+            const targetScroll = startScroll + (scrollDistance * easeProgress);
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'auto' // Utiliser 'auto' pour un scroll plus fluide
+            });
+
+            if (progress < 1) {
+              autoScrollTimerRef.current = requestAnimationFrame(scrollStep);
+            } else {
+              // Scroll terminé, afficher le bouton
+              setShowNextButton(true);
+            }
+          };
+
+          // Démarrer le scroll automatique après 2 secondes
+          setTimeout(() => {
+            scrollStep();
+          }, 2000);
+        } else {
+          // Contenu court, afficher le bouton après 3 secondes
+          setTimeout(() => {
+            setShowNextButton(true);
+          }, 3000);
+        }
+      }
+    };
+
+    // Détecter le scroll manuel pour arrêter le scroll automatique
     const handleScroll = () => {
       setHasScrolled(true);
+      if (autoScrollTimerRef.current) {
+        cancelAnimationFrame(autoScrollTimerRef.current);
+        autoScrollTimerRef.current = null;
+      }
+      
       const scrollPosition = window.scrollY + window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       
@@ -28,19 +84,20 @@ const ContentCard = ({ content, onNext, onComplete }) => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Afficher le bouton après un délai minimum (3 secondes) ou si l'utilisateur a scrollé
-    const autoShowTimer = setTimeout(() => {
-      if (hasScrolled || readingTime >= 3) {
-        setShowNextButton(true);
-      }
-    }, 3000);
+    // Démarrer le scroll automatique après un court délai
+    const autoScrollDelay = setTimeout(() => {
+      startAutoScroll();
+    }, 1000);
 
     return () => {
       clearInterval(timer);
-      clearTimeout(autoShowTimer);
+      clearTimeout(autoScrollDelay);
       window.removeEventListener('scroll', handleScroll);
+      if (autoScrollTimerRef.current) {
+        cancelAnimationFrame(autoScrollTimerRef.current);
+      }
     };
-  }, [hasScrolled, readingTime]);
+  }, [content]);
 
   const handleNext = () => {
     setShowNextButton(false);
@@ -52,15 +109,18 @@ const ContentCard = ({ content, onNext, onComplete }) => {
   };
 
   const getContentIcon = (contentType) => {
+    const iconSize = 24;
+    const iconColor = 'rgba(236, 72, 153, 0.9)';
+    
     switch (contentType) {
       case 'article':
-        return '📄';
+        return <IconArticle size={iconSize} color={iconColor} />;
       case 'exemple':
-        return '💡';
+        return <IconExample size={iconSize} color={iconColor} />;
       case 'exercise':
-        return '✏️';
+        return <IconExercise size={iconSize} color={iconColor} />;
       default:
-        return '📝';
+        return <IconSummary size={iconSize} color={iconColor} />;
     }
   };
 
@@ -198,6 +258,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
             {/* Contenu */}
             {content.content && (
               <motion.div
+                ref={contentRef}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -238,7 +299,8 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                       gap: '0.5rem',
                     }}
                   >
-                    <span>✓ Lu</span>
+                    <IconCheck size={16} color="rgba(236, 72, 153, 0.9)" style={{ marginRight: '0.25rem' }} />
+                    <span>Lu</span>
                   </motion.span>
                 )}
               </motion.div>

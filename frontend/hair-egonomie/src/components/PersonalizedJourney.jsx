@@ -1,7 +1,81 @@
 import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import TradingBackground from './TradingBackground';
+import { IconArrowRight, IconCheck } from './icons';
 
 const PersonalizedJourney = ({ journey, onStart }) => {
+  const containerRef = useRef(null);
+  const autoScrollTimerRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll automatique vers le haut au chargement
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    let hasStarted = false;
+    const startJourney = () => {
+      if (!hasStarted && onStart) {
+        hasStarted = true;
+        onStart();
+      }
+    };
+
+    // Démarrer le scroll automatique après un court délai
+    const startAutoScroll = setTimeout(() => {
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Si le contenu dépasse la hauteur de l'écran, faire un scroll automatique
+      if (documentHeight > viewportHeight * 1.1) {
+        const scrollDuration = 4000; // 4 secondes comme demandé
+        const scrollDistance = documentHeight - viewportHeight + 100;
+        const startTime = Date.now();
+        const startScroll = window.scrollY || 0;
+
+        const scrollStep = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / scrollDuration, 1);
+          const easeProgress = 1 - Math.pow(1 - progress, 3); // Easing cubic
+
+          const targetScroll = startScroll + (scrollDistance * easeProgress);
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'auto'
+          });
+
+          if (progress < 1) {
+            autoScrollTimerRef.current = requestAnimationFrame(scrollStep);
+          } else {
+            // Scroll terminé, démarrer le parcours automatiquement
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+              startJourney();
+            }, 500);
+          }
+        };
+
+        scrollStep();
+      } else {
+        // Contenu court, démarrer automatiquement après 1 seconde
+        setTimeout(() => {
+          startJourney();
+        }, 1000);
+      }
+    }, 500); // Démarrer rapidement après 0.5 seconde
+
+    // Fallback : démarrer après 6 secondes maximum au cas où
+    const fallbackTimer = setTimeout(() => {
+      startJourney();
+    }, 6000);
+
+    return () => {
+      clearTimeout(startAutoScroll);
+      clearTimeout(fallbackTimer);
+      if (autoScrollTimerRef.current) {
+        cancelAnimationFrame(autoScrollTimerRef.current);
+      }
+    };
+  }, [journey, onStart]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -41,6 +115,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
       />
 
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
@@ -134,12 +209,18 @@ const PersonalizedJourney = ({ journey, onStart }) => {
               >
                 <div
                   style={{
-                    fontSize: '2.5rem',
                     minWidth: '60px',
                     textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  {module.icon}
+                  {module.icon && typeof module.icon === 'function' ? (
+                    <module.icon size={40} color="rgba(236, 72, 153, 0.9)" />
+                  ) : (
+                    module.icon
+                  )}
                 </div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
                   <div
@@ -163,63 +244,23 @@ const PersonalizedJourney = ({ journey, onStart }) => {
                 </div>
                 <div
                   style={{
-                    fontSize: '1.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     color: 'rgba(255, 255, 255, 0.6)',
                   }}
                 >
-                  {index < journey.modules.length - 1 ? '→' : '✓'}
+                  {index < journey.modules.length - 1 ? (
+                    <IconArrowRight size={24} color="rgba(255, 255, 255, 0.6)" />
+                  ) : (
+                    <IconCheck size={24} color="rgba(236, 72, 153, 0.9)" />
+                  )}
                 </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* Bouton pour commencer */}
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          whileHover={{
-            scale: 1.05,
-            boxShadow: '0 15px 50px -10px rgba(236, 72, 153, 0.7)',
-          }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onStart}
-          style={{
-            padding: '1.25rem 3rem',
-            fontSize: '1rem',
-            fontWeight: 600,
-            border: 'none',
-            borderRadius: '1rem',
-            background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
-            color: 'white',
-            cursor: 'pointer',
-            boxShadow: '0 12px 40px rgba(236, 72, 153, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            margin: '0 auto',
-            letterSpacing: '0.02em',
-          }}
-        >
-          <span>Commencer le parcours</span>
-          <motion.svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            animate={{ x: [0, 4, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </motion.svg>
-        </motion.button>
       </motion.div>
     </motion.div>
   );
