@@ -1,83 +1,248 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { slideUp, staggerContainer } from '../animations/variants';
+import FloatingCards from './FloatingCards';
 
 const ModeSelector = ({ onSelect }) => {
-  const modes = ['Découvrir', 'Apprendre', 'S\'exercer'];
+  const modes = [
+    { 
+      id: 'decouvrir',
+      label: 'Découvrir',
+      icon: '🔍',
+      description: 'Explorez les concepts',
+      color: '#667eea'
+    },
+    { 
+      id: 'apprendre',
+      label: 'Apprendre',
+      icon: '📚',
+      description: 'Approfondissez vos connaissances',
+      color: '#764ba2'
+    },
+    { 
+      id: 'exercer',
+      label: "S'exercer",
+      icon: '💪',
+      description: 'Mettez en pratique',
+      color: '#f093fb'
+    }
+  ];
 
   return (
     <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={slideUp}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
       style={{
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
         padding: '2rem',
-        background: '#f5f5f5'
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <motion.h1
-        variants={slideUp}
+      {/* Cartes flottantes en arrière-plan */}
+      <FloatingCards />
+      
+      {/* Overlay élégant */}
+      <div
         style={{
-          fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `
+            radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(219, 39, 119, 0.02) 0%, transparent 50%)
+          `,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          maxWidth: '600px',
+          width: '100%',
+          textAlign: 'center',
           marginBottom: '4rem',
-          color: '#333',
-          textAlign: 'center'
+          position: 'relative',
+          zIndex: 10,
         }}
       >
-        Que veux-tu faire aujourd'hui ?
-      </motion.h1>
-      
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          style={{
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontWeight: 700,
+            background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            marginBottom: '1rem',
+            letterSpacing: '-0.02em',
+            textShadow: '0 0 30px rgba(236, 72, 153, 0.3)',
+          }}
+        >
+          Que voulez-vous faire aujourd'hui ?
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          style={{
+            fontSize: '1.125rem',
+            color: 'rgba(236, 72, 153, 0.8)',
+            fontWeight: 400,
+          }}
+        >
+          Choisissez votre parcours d'apprentissage
+        </motion.p>
+      </motion.div>
+
       <motion.div
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.15,
+              delayChildren: 0.4,
+            },
+          },
+        }}
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1.5rem',
+          gap: '1.25rem',
           width: '100%',
-          maxWidth: '400px'
+          maxWidth: '500px',
+          position: 'relative',
+          zIndex: 10,
         }}
       >
         <AnimatePresence>
           {modes.map((mode, index) => (
             <motion.button
-              key={mode}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ 
-                delay: index * 0.12,
-                duration: 0.5,
-                ease: [0.4, 0, 0.2, 1]
+              key={mode.id}
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.9 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.4, 0, 0.2, 1],
+                  },
+                },
               }}
-              whileHover={{ 
-                scale: 1.05,
-                y: -2,
-                boxShadow: "0 10px 30px rgba(102, 126, 234, 0.3)",
-                borderColor: "#764ba2"
+              whileHover={{
+                scale: 1.02,
+                y: -4,
+                transition: { duration: 0.2 },
               }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onSelect(mode)}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onSelect(mode.label)}
               style={{
-                padding: '1.5rem 2rem',
-                fontSize: '1.2rem',
-                fontWeight: '600',
-                border: '2px solid #667eea',
-                borderRadius: '12px',
-                background: 'white',
-                color: '#667eea',
+                padding: '1.75rem 2rem',
+                background: 'rgba(20, 20, 20, 0.6)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                border: '1px solid rgba(236, 72, 153, 0.2)',
+                borderRadius: '1.5rem',
                 cursor: 'pointer',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.5rem',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)'
+                boxShadow: '0 8px 32px rgba(236, 72, 153, 0.1)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              onHoverStart={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.5)';
+                e.currentTarget.style.boxShadow = '0 12px 40px -8px rgba(236, 72, 153, 0.4)';
+                e.currentTarget.style.background = 'rgba(30, 30, 30, 0.8)';
+              }}
+              onHoverEnd={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.2)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(236, 72, 153, 0.1)';
+                e.currentTarget.style.background = 'rgba(20, 20, 20, 0.6)';
               }}
             >
-              {mode}
+              {/* Barre de couleur animée rose */}
+              <motion.div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: '4px',
+                  background: 'linear-gradient(180deg, #ec4899 0%, #db2777 100%)',
+                  boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)',
+                }}
+                initial={{ scaleY: 0 }}
+                whileHover={{ scaleY: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+
+              <motion.div
+                style={{
+                  fontSize: '2.5rem',
+                  lineHeight: 1,
+                }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ duration: 0.2 }}
+              >
+                {mode.icon}
+              </motion.div>
+
+              <div style={{ flex: 1 }}>
+                <h3
+                  style={{
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    color: '#ec4899',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  {mode.label}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.875rem',
+                    color: 'rgba(236, 72, 153, 0.7)',
+                    fontWeight: 400,
+                  }}
+                >
+                  {mode.description}
+                </p>
+              </div>
+
+              <motion.div
+                style={{
+                  fontSize: '1.5rem',
+                  color: '#ec4899',
+                }}
+                initial={{ x: -10, opacity: 0 }}
+                whileHover={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                →
+              </motion.div>
             </motion.button>
           ))}
         </AnimatePresence>
@@ -87,4 +252,3 @@ const ModeSelector = ({ onSelect }) => {
 };
 
 export default ModeSelector;
-

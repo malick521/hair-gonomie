@@ -31,32 +31,34 @@ function App() {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {step === "splash" && (
-        <SplashScreen key="splash" next={handleSplashComplete} />
-      )}
-      
-      {step === "mode" && (
-        <>
-          <ModeSelector 
-            key="mode" 
-            onSelect={handleModeSelect} 
-          />
-          {showNextButton && (
-            <NextButton
-              label={`Commencer par ${mode?.toLowerCase()}`}
-              onClick={handleNext}
-              isVisible={showNextButton}
-              delay={0.2}
+    <div className="app-container">
+      <AnimatePresence mode="wait">
+        {step === "splash" && (
+          <SplashScreen key="splash" next={handleSplashComplete} />
+        )}
+        
+        {step === "mode" && (
+          <>
+            <ModeSelector 
+              key="mode" 
+              onSelect={handleModeSelect} 
             />
-          )}
-        </>
-      )}
+            {showNextButton && (
+              <NextButton
+                label={`Continuer avec ${mode}`}
+                onClick={handleNext}
+                isVisible={showNextButton}
+                delay={0.2}
+              />
+            )}
+          </>
+        )}
 
-      {step === "questions" && (
-        <QuestionCard key="questions" mode={mode} />
-      )}
-    </AnimatePresence>
+        {step === "questions" && (
+          <QuestionCard key="questions" mode={mode} />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
