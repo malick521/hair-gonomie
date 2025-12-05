@@ -230,7 +230,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
             style={{
               fontSize: 'clamp(2rem, 5vw, 3rem)',
               fontWeight: 700,
-              color: '#ec4899',
+              color: 'rgba(255, 255, 255, 0.95)',
               marginBottom: '1rem',
               letterSpacing: '-0.02em',
               textShadow: '0 5px 20px rgba(236, 72, 153, 0.4)',
@@ -244,7 +244,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
             transition={{ delay: 0.3, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
             style={{
               fontSize: '1.125rem',
-              color: '#ec4899',
+              color: 'rgba(255, 255, 255, 0.85)',
               fontWeight: 400,
               opacity: 0.9,
             }}
@@ -559,7 +559,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
                   style={{
                     fontSize: '1.1rem', // Réduit de 1.25rem
                     fontWeight: 600,
-                    color: '#ec4899',
+                    color: 'rgba(255, 255, 255, 0.95)',
                     marginBottom: '0.2rem', // Réduit
                   }}
                 >
@@ -568,7 +568,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
                 <p
                   style={{
                     fontSize: '0.8rem', // Réduit de 0.875rem
-                    color: 'rgba(236, 72, 153, 0.7)',
+                    color: 'rgba(255, 255, 255, 0.75)',
                     fontWeight: 400,
                   }}
                 >
@@ -578,13 +578,13 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
 
               <motion.div
                 style={{
-                  color: '#ec4899',
+                  color: 'rgba(255, 255, 255, 0.9)',
                 }}
                 initial={{ x: -10, opacity: 0 }}
                 whileHover={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <IconArrowRight size={20} color="#ec4899" /> {/* Réduit de 24 */}
+                <IconArrowRight size={20} color="rgba(255, 255, 255, 0.9)" /> {/* Réduit de 24 */}
               </motion.div>
             </motion.button>
           ))}

@@ -15,22 +15,94 @@ const TradingBackground = () => {
         pointerEvents: 'none',
       }}
     >
-      {/* 1. La Grille (Grid Overlay) - Très subtile */}
+      {/* 1. Grille animée style trading - Plus dynamique */}
       <motion.div 
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.25 }}
-        transition={{ duration: 3, ease: [0.4, 0, 0.2, 1] }}
+        animate={{ 
+          opacity: [0.15, 0.25, 0.15],
+          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
+        }}
+        transition={{ 
+          opacity: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+          backgroundPosition: { duration: 20, repeat: Infinity, ease: "linear" }
+        }}
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `linear-gradient(rgba(236, 72, 153, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(236, 72, 153, 0.3) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-          maskImage: 'radial-gradient(ellipse at center, black 60%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse at center, black 60%, transparent 100%)',
+          backgroundImage: `
+            linear-gradient(rgba(236, 72, 153, 0.25) 1px, transparent 1px), 
+            linear-gradient(90deg, rgba(236, 72, 153, 0.25) 1px, transparent 1px),
+            linear-gradient(rgba(219, 39, 119, 0.1) 1px, transparent 1px), 
+            linear-gradient(90deg, rgba(219, 39, 119, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px, 80px 80px, 20px 20px, 20px 20px',
+          backgroundPosition: '0 0, 0 0, 0 0, 0 0',
+          maskImage: 'radial-gradient(ellipse at center, black 50%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, black 50%, transparent 100%)',
         }}
       />
 
-      {/* 2. Les Orbes Lumineux Roses - Animations ultra-fluides et subtiles */}
+      {/* 2. Lignes de connexion animées (style trading) */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`line-${i}`}
+          style={{
+            position: 'absolute',
+            width: '2px',
+            height: '100%',
+            background: `linear-gradient(180deg, 
+              transparent 0%, 
+              rgba(236, 72, 153, ${0.1 + i * 0.05}) ${20 + i * 10}%, 
+              rgba(236, 72, 153, ${0.15 + i * 0.05}) ${50 + i * 5}%, 
+              transparent 100%
+            )`,
+            left: `${15 + i * 15}%`,
+            top: 0,
+            filter: 'blur(1px)',
+          }}
+          animate={{
+            opacity: [0.2, 0.5, 0.2],
+            y: [0, -30, 0],
+          }}
+          transition={{
+            duration: 4 + i * 0.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.3,
+          }}
+        />
+      ))}
+
+      {/* 3. Particules flottantes animées (style trading) */}
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          style={{
+            position: 'absolute',
+            width: `${2 + (i % 3)}px`,
+            height: `${2 + (i % 3)}px`,
+            borderRadius: '50%',
+            background: `rgba(236, 72, 153, ${0.3 + (i % 3) * 0.2})`,
+            left: `${(i * 7) % 100}%`,
+            top: `${(i * 11) % 100}%`,
+            boxShadow: `0 0 ${4 + i * 2}px rgba(236, 72, 153, 0.5)`,
+          }}
+          animate={{
+            y: [0, -100, 0],
+            x: [0, (i % 2 === 0 ? 1 : -1) * 50, 0],
+            opacity: [0.2, 0.8, 0.2],
+            scale: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: 8 + i * 0.3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.2,
+          }}
+        />
+      ))}
+
+      {/* 4. Les Orbes Lumineux Roses - Animations ultra-fluides et dynamiques */}
       
       {/* Orbe Rose Principal - Haut gauche */}
       <motion.div
@@ -163,11 +235,17 @@ const TradingBackground = () => {
         }}
       />
 
-      {/* Overlay de profondeur supplémentaire */}
+      {/* 5. Overlay de profondeur avec gradients animés */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 4 }}
+        animate={{ 
+          opacity: 1,
+          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
+        }}
+        transition={{ 
+          opacity: { duration: 4 },
+          backgroundPosition: { duration: 15, repeat: Infinity, ease: "linear" }
+        }}
         style={{
           position: 'absolute',
           inset: 0,
@@ -176,9 +254,75 @@ const TradingBackground = () => {
             radial-gradient(ellipse at 80% 70%, rgba(219, 39, 119, 0.12) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 50%, rgba(251, 113, 133, 0.1) 0%, transparent 60%)
           `,
+          backgroundSize: '200% 200%',
           pointerEvents: 'none',
         }}
       />
+
+      {/* 6. Effets de flux animés (style trading) */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={`flow-${i}`}
+          style={{
+            position: 'absolute',
+            width: '300px',
+            height: '2px',
+            background: `linear-gradient(90deg, 
+              transparent 0%, 
+              rgba(236, 72, 153, ${0.3 + i * 0.1}) 50%, 
+              transparent 100%
+            )`,
+            left: `${20 + i * 25}%`,
+            top: `${30 + i * 20}%`,
+            filter: 'blur(2px)',
+            transform: `rotate(${-45 + i * 15}deg)`,
+          }}
+          animate={{
+            x: [0, 200, 0],
+            y: [0, 100, 0],
+            opacity: [0.2, 0.6, 0.2],
+            scale: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: 6 + i * 1,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 1.5,
+          }}
+        />
+      ))}
+
+      {/* 7. Points de connexion animés */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={`connection-${i}`}
+          style={{
+            position: 'absolute',
+            width: '4px',
+            height: '4px',
+            borderRadius: '50%',
+            background: 'rgba(236, 72, 153, 0.8)',
+            left: `${10 + (i * 12) % 80}%`,
+            top: `${15 + (i * 15) % 70}%`,
+            boxShadow: '0 0 8px rgba(236, 72, 153, 0.8)',
+          }}
+          animate={{
+            scale: [1, 2, 1],
+            opacity: [0.5, 1, 0.5],
+            boxShadow: [
+              '0 0 8px rgba(236, 72, 153, 0.8)',
+              '0 0 20px rgba(236, 72, 153, 1)',
+              '0 0 8px rgba(236, 72, 153, 0.8)',
+            ],
+          }}
+          transition={{
+            duration: 3 + i * 0.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.4,
+          }}
+        />
+      ))}
     </div>
   );
 };
