@@ -1,40 +1,42 @@
 import { motion } from 'framer-motion';
 
 const FloatingCards = () => {
-  // Configuration des cartes - couloirs séparés pour éviter les croisements
+  // Configuration des cartes - couloirs bien séparés pour éviter les croisements
+  // Chaque couloir a un espacement vertical suffisant et des délais importants entre les cartes
+  
   // Couloir 1 : Haut de la page - mouvement de gauche à droite uniquement
   const topLaneCards = [
     {
       id: 1,
       width: 300,
       height: 190,
-      y: '10%',      // Couloir haut
+      y: '8%',      // Couloir haut
       rotation: -12,
       delay: 0,
       depth: 1,
-      speed: 12,
+      speed: 14,
       direction: 'left-to-right',
     },
     {
       id: 2,
       width: 280,
       height: 175,
-      y: '10%',      // Même couloir haut
+      y: '8%',      // Même couloir haut - délai important pour éviter croisement
       rotation: 18,
-      delay: 1.5,
+      delay: 5,     // Délai augmenté pour éviter superposition
       depth: 2,
-      speed: 14,
+      speed: 15,
       direction: 'left-to-right',
     },
     {
       id: 3,
       width: 260,
       height: 165,
-      y: '10%',      // Même couloir haut
+      y: '8%',      // Même couloir haut
       rotation: -8,
-      delay: 3,
+      delay: 10,    // Délai encore plus important
       depth: 3,
-      speed: 13,
+      speed: 14,
       direction: 'left-to-right',
     },
   ];
@@ -45,33 +47,33 @@ const FloatingCards = () => {
       id: 4,
       width: 290,
       height: 180,
-      y: '30%',      // Couloir milieu-haut
+      y: '25%',      // Couloir milieu-haut - espacement augmenté
       rotation: 22,
-      delay: 0.5,
+      delay: 1,
       depth: 4,
-      speed: 15,
+      speed: 16,
       direction: 'right-to-left',
     },
     {
       id: 5,
       width: 275,
       height: 172,
-      y: '30%',      // Même couloir
+      y: '25%',      // Même couloir
       rotation: -15,
-      delay: 2,
+      delay: 6,      // Délai important
       depth: 5,
-      speed: 13,
+      speed: 15,
       direction: 'right-to-left',
     },
     {
       id: 6,
       width: 285,
       height: 178,
-      y: '30%',      // Même couloir
+      y: '25%',      // Même couloir
       rotation: 20,
-      delay: 3.5,
+      delay: 11,     // Délai important
       depth: 6,
-      speed: 14,
+      speed: 16,
       direction: 'right-to-left',
     },
   ];
@@ -82,33 +84,33 @@ const FloatingCards = () => {
       id: 7,
       width: 270,
       height: 170,
-      y: '50%',      // Couloir centre
+      y: '45%',      // Couloir centre - espacement augmenté
       rotation: -10,
-      delay: 1,
+      delay: 2,
       depth: 7,
-      speed: 12,
+      speed: 14,
       direction: 'left-to-right',
     },
     {
       id: 8,
       width: 295,
       height: 185,
-      y: '50%',      // Même couloir
+      y: '45%',      // Même couloir
       rotation: 25,
-      delay: 2.5,
+      delay: 7,      // Délai important
       depth: 8,
-      speed: 16,
+      speed: 17,
       direction: 'left-to-right',
     },
     {
       id: 9,
       width: 265,
       height: 168,
-      y: '50%',      // Même couloir
+      y: '45%',      // Même couloir
       rotation: -18,
-      delay: 4,
+      delay: 12,     // Délai important
       depth: 9,
-      speed: 13,
+      speed: 15,
       direction: 'left-to-right',
     },
   ];
@@ -119,33 +121,33 @@ const FloatingCards = () => {
       id: 10,
       width: 280,
       height: 175,
-      y: '70%',      // Couloir milieu-bas
+      y: '65%',      // Couloir milieu-bas - espacement augmenté
       rotation: 15,
-      delay: 0.8,
+      delay: 1.5,
       depth: 10,
-      speed: 14,
+      speed: 15,
       direction: 'right-to-left',
     },
     {
       id: 11,
       width: 290,
       height: 182,
-      y: '70%',      // Même couloir
+      y: '65%',      // Même couloir
       rotation: -22,
-      delay: 2.3,
+      delay: 6.5,    // Délai important
       depth: 11,
-      speed: 15,
+      speed: 16,
       direction: 'right-to-left',
     },
     {
       id: 12,
       width: 275,
       height: 172,
-      y: '70%',      // Même couloir
+      y: '65%',      // Même couloir
       rotation: 12,
-      delay: 3.8,
+      delay: 11.5,   // Délai important
       depth: 12,
-      speed: 13,
+      speed: 15,
       direction: 'right-to-left',
     },
   ];
@@ -156,33 +158,33 @@ const FloatingCards = () => {
       id: 13,
       width: 285,
       height: 178,
-      y: '90%',      // Couloir bas
+      y: '85%',      // Couloir bas - espacement augmenté
       rotation: -20,
-      delay: 1.2,
+      delay: 2.5,
       depth: 13,
-      speed: 12,
+      speed: 14,
       direction: 'left-to-right',
     },
     {
       id: 14,
       width: 270,
       height: 170,
-      y: '90%',      // Même couloir
+      y: '85%',      // Même couloir
       rotation: 18,
-      delay: 2.7,
+      delay: 7.5,    // Délai important
       depth: 14,
-      speed: 14,
+      speed: 15,
       direction: 'left-to-right',
     },
     {
       id: 15,
       width: 295,
       height: 185,
-      y: '90%',      // Même couloir
+      y: '85%',      // Même couloir
       rotation: -15,
-      delay: 4.2,
+      delay: 12.5,   // Délai important
       depth: 15,
-      speed: 13,
+      speed: 14,
       direction: 'left-to-right',
     },
   ];
@@ -274,7 +276,7 @@ const FloatingCards = () => {
                   ],
               y: [
                 `${finalY}%`,
-                `${finalY}%`,  // Reste dans le même couloir
+                `${finalY}%`,  // Reste strictement dans le même couloir - pas de déviation
                 `${finalY}%`,
                 `${finalY}%`,
                 `${finalY}%`,
