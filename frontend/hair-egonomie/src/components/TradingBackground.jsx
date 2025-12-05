@@ -42,14 +42,14 @@ const TradingBackground = () => {
           height: '800px',
           borderRadius: '50%',
           mixBlendMode: 'screen',
-          filter: 'blur(150px)',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(219, 39, 119, 0.2) 35%, rgba(0,0,0,0) 65%)',
+          filter: 'blur(120px)',
+          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.7) 0%, rgba(219, 39, 119, 0.4) 35%, rgba(0,0,0,0) 65%)',
         }}
         animate={{
           x: [0, 80, -50, 40, 0],
           y: [0, -60, 50, -30, 0],
           scale: [1, 1.2, 0.9, 1.15, 1],
-          opacity: [0.25, 0.35, 0.28, 0.32, 0.25],
+          opacity: [0.4, 0.55, 0.45, 0.5, 0.4],
         }}
         transition={{
           duration: 30,
@@ -68,14 +68,14 @@ const TradingBackground = () => {
           height: '900px',
           borderRadius: '50%',
           mixBlendMode: 'screen',
-          filter: 'blur(160px)',
-          background: 'radial-gradient(circle, rgba(219, 39, 119, 0.35) 0%, rgba(190, 24, 93, 0.18) 35%, rgba(0,0,0,0) 65%)',
+          filter: 'blur(130px)',
+          background: 'radial-gradient(circle, rgba(219, 39, 119, 0.6) 0%, rgba(190, 24, 93, 0.35) 35%, rgba(0,0,0,0) 65%)',
         }}
         animate={{
           x: [0, -90, 60, -50, 0],
           y: [0, 70, -55, 40, 0],
           scale: [1, 0.85, 1.25, 0.9, 1],
-          opacity: [0.22, 0.32, 0.26, 0.3, 0.22],
+          opacity: [0.35, 0.5, 0.4, 0.45, 0.35],
         }}
         transition={{
           duration: 35,
@@ -96,11 +96,11 @@ const TradingBackground = () => {
           height: '800px',
           borderRadius: '50%',
           mixBlendMode: 'screen',
-          filter: 'blur(170px)',
-          background: 'radial-gradient(circle, rgba(251, 113, 133, 0.3) 0%, rgba(236, 72, 153, 0.15) 35%, rgba(0,0,0,0) 65%)',
+          filter: 'blur(140px)',
+          background: 'radial-gradient(circle, rgba(251, 113, 133, 0.5) 0%, rgba(236, 72, 153, 0.3) 35%, rgba(0,0,0,0) 65%)',
         }}
         animate={{
-          opacity: [0.18, 0.28, 0.22, 0.26, 0.18],
+          opacity: [0.3, 0.45, 0.35, 0.4, 0.3],
           scale: [1, 1.15, 0.92, 1.08, 1],
         }}
         transition={{
@@ -121,13 +121,13 @@ const TradingBackground = () => {
           height: '600px',
           borderRadius: '50%',
           mixBlendMode: 'screen',
-          filter: 'blur(130px)',
-          background: 'radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, rgba(236, 72, 153, 0.12) 35%, rgba(0,0,0,0) 65%)',
+          filter: 'blur(110px)',
+          background: 'radial-gradient(circle, rgba(244, 114, 182, 0.45) 0%, rgba(236, 72, 153, 0.25) 35%, rgba(0,0,0,0) 65%)',
         }}
         animate={{
           x: [0, 45, -30, 25, 0],
           y: [0, -35, 30, -20, 0],
-          opacity: [0.15, 0.25, 0.2, 0.23, 0.15],
+          opacity: [0.28, 0.4, 0.32, 0.36, 0.28],
         }}
         transition={{
           duration: 24,
@@ -147,13 +147,13 @@ const TradingBackground = () => {
           height: '650px',
           borderRadius: '50%',
           mixBlendMode: 'screen',
-          filter: 'blur(135px)',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, rgba(219, 39, 119, 0.11) 35%, rgba(0,0,0,0) 65%)',
+          filter: 'blur(115px)',
+          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(219, 39, 119, 0.22) 35%, rgba(0,0,0,0) 65%)',
         }}
         animate={{
           x: [0, -50, 35, -25, 0],
           y: [0, 40, -30, 25, 0],
-          opacity: [0.14, 0.24, 0.18, 0.22, 0.14],
+          opacity: [0.25, 0.38, 0.3, 0.35, 0.25],
         }}
         transition={{
           duration: 28,
@@ -166,15 +166,15 @@ const TradingBackground = () => {
       {/* Overlay de profondeur supplémentaire */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 4 }}
         style={{
           position: 'absolute',
           inset: 0,
           background: `
-            radial-gradient(ellipse at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 70%, rgba(219, 39, 119, 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(251, 113, 133, 0.04) 0%, transparent 60%)
+            radial-gradient(ellipse at 20% 30%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(219, 39, 119, 0.12) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(251, 113, 133, 0.1) 0%, transparent 60%)
           `,
           pointerEvents: 'none',
         }}

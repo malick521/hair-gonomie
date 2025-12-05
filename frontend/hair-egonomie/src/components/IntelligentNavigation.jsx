@@ -182,7 +182,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
       {/* Background animé */}
       <TradingBackground />
 
-      {/* Overlay élégant */}
+      {/* Overlay élégant - réduit pour laisser voir le background */}
       <div
         style={{
           position: 'absolute',
@@ -191,11 +191,11 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
           right: 0,
           bottom: 0,
           background: `
-            radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.03) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(219, 39, 119, 0.02) 0%, transparent 50%)
+            radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.01) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(219, 39, 119, 0.01) 0%, transparent 50%)
           `,
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 1,
         }}
       />
 
@@ -411,6 +411,8 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
             </motion.div>
           </motion.div>
         )}
+
+
 
         {/* Options de navigation ordonnées intelligemment */}
           <motion.div
