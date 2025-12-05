@@ -198,7 +198,7 @@ const QuestionCard = ({ mode, onComplete }) => {
             }}
             style={{
               fontSize: '1.25rem',
-              color: 'rgba(236, 72, 153, 0.8)',
+              color: 'rgba(255, 255, 255, 0.8)',
               fontWeight: 500,
             }}
           >
@@ -220,7 +220,7 @@ const QuestionCard = ({ mode, onComplete }) => {
           justifyContent: 'center',
           minHeight: '100vh',
           fontSize: '1.25rem',
-          color: 'rgba(236, 72, 153, 0.8)',
+          color: 'rgba(255, 255, 255, 0.8)',
           background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
         }}
       >

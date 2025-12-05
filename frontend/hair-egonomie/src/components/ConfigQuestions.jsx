@@ -308,7 +308,7 @@ const ConfigQuestions = ({ onComplete }) => {
                         style={{
                           fontSize: '1.25rem',
                           fontWeight: 600,
-                          color: '#ec4899',
+                          color: 'rgba(255, 255, 255, 0.95)',
                           marginBottom: '0.5rem',
                           textAlign: 'center',
                         }}
@@ -318,7 +318,7 @@ const ConfigQuestions = ({ onComplete }) => {
                       <p
                         style={{
                           fontSize: '0.875rem',
-                          color: 'rgba(236, 72, 153, 0.7)',
+                          color: 'rgba(255, 255, 255, 0.75)',
                           textAlign: 'center',
                           marginBottom: '0.5rem',
                         }}
@@ -328,7 +328,7 @@ const ConfigQuestions = ({ onComplete }) => {
                       <div
                         style={{
                           fontSize: '0.75rem',
-                          color: 'rgba(236, 72, 153, 0.5)',
+                          color: 'rgba(255, 255, 255, 0.6)',
                           fontStyle: 'italic',
                           marginTop: '0.5rem',
                           display: 'flex',
@@ -373,7 +373,7 @@ const ConfigQuestions = ({ onComplete }) => {
                       <p
                         style={{
                           fontSize: '0.875rem',
-                          color: 'rgba(236, 72, 153, 0.9)',
+                          color: 'rgba(255, 255, 255, 0.9)',
                           textAlign: 'center',
                           lineHeight: 1.6,
                         }}

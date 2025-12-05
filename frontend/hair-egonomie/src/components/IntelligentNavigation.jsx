@@ -304,7 +304,7 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
                   style={{
                     fontSize: '0.75rem',
                     fontWeight: 700,
-                    color: '#ec4899',
+                    color: 'rgba(255, 255, 255, 0.9)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
                   }}
@@ -380,10 +380,10 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
                               whileHover={{ rotate: 15, scale: 1.1 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <item.IconComponent size={16} color="#ec4899" />
+                              <item.IconComponent size={16} color="rgba(255, 255, 255, 0.9)" />
                             </motion.div>
                           )}
-                          <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.8rem' }}>
+                          <div style={{ fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)', fontSize: '0.8rem' }}>
                             {item?.label}
                           </div>
                         </div>
@@ -391,13 +391,13 @@ const IntelligentNavigation = ({ onSelect, onRecommendationClick }) => {
                           animate={{ x: [0, 3, 0] }}
                           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                         >
-                          <IconArrowRight size={15} color="#ec4899" />
+                          <IconArrowRight size={15} color="rgba(255, 255, 255, 0.9)" />
                         </motion.div>
                       </div>
                       <div
                         style={{
                           fontSize: '0.7rem',
-                          color: 'rgba(236, 72, 153, 0.75)',
+                          color: 'rgba(255, 255, 255, 0.75)',
                           lineHeight: 1.4,
                           paddingLeft: '2rem',
                         }}
