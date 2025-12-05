@@ -75,7 +75,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
           transition={{ delay: 0.6 }}
           style={{
             fontSize: '1.125rem',
-            color: 'rgba(236, 72, 153, 0.85)',
+            color: 'rgba(255, 255, 255, 0.85)',
             marginBottom: '3rem',
           }}
         >
@@ -101,7 +101,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
             style={{
               fontSize: '1.5rem',
               fontWeight: 600,
-              color: '#ec4899',
+              color: 'rgba(255, 255, 255, 0.95)',
               marginBottom: '2rem',
               textAlign: 'center',
             }}
@@ -146,7 +146,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
                     style={{
                       fontSize: '1.25rem',
                       fontWeight: 600,
-                      color: '#ec4899',
+                      color: 'rgba(255, 255, 255, 0.95)',
                       marginBottom: '0.25rem',
                     }}
                   >
@@ -155,7 +155,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
                   <div
                     style={{
                       fontSize: '0.875rem',
-                      color: 'rgba(236, 72, 153, 0.75)',
+                      color: 'rgba(255, 255, 255, 0.75)',
                     }}
                   >
                     Durée estimée : {module.duration}
@@ -164,7 +164,7 @@ const PersonalizedJourney = ({ journey, onStart }) => {
                 <div
                   style={{
                     fontSize: '1.5rem',
-                    color: 'rgba(236, 72, 153, 0.5)',
+                    color: 'rgba(255, 255, 255, 0.6)',
                   }}
                 >
                   {index < journey.modules.length - 1 ? '→' : '✓'}

@@ -169,7 +169,7 @@ const ResultsPage = ({ mode, onRestart, totalQuestions, completedQuestions }) =>
                 transform: 'translate(-50%, -50%)',
                 fontSize: '2rem',
                 fontWeight: 700,
-                color: '#ec4899',
+                color: 'rgba(255, 255, 255, 0.95)',
               }}
             >
               {completionPercentage}%
@@ -190,7 +190,7 @@ const ResultsPage = ({ mode, onRestart, totalQuestions, completedQuestions }) =>
                 style={{
                   fontSize: '2.5rem',
                   fontWeight: 700,
-                  color: '#ec4899',
+                  color: 'rgba(255, 255, 255, 0.95)',
                   marginBottom: '0.5rem',
                 }}
               >
@@ -212,7 +212,7 @@ const ResultsPage = ({ mode, onRestart, totalQuestions, completedQuestions }) =>
                 style={{
                   fontSize: '2.5rem',
                   fontWeight: 700,
-                  color: '#ec4899',
+                  color: 'rgba(255, 255, 255, 0.95)',
                   marginBottom: '0.5rem',
                 }}
               >

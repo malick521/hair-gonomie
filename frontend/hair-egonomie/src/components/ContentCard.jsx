@@ -168,7 +168,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                   transition={{ delay: 0.2 }}
                   style={{
                     fontSize: '0.875rem',
-                    color: 'rgba(236, 72, 153, 0.7)',
+                    color: 'rgba(255, 255, 255, 0.8)',
                     fontWeight: 500,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
@@ -184,10 +184,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                   style={{
                     fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                     fontWeight: 700,
-                    background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #f472b6 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
+                    color: 'rgba(255, 255, 255, 0.95)',
                     marginTop: '0.5rem',
                     lineHeight: 1.3,
                     letterSpacing: '-0.02em',
@@ -208,7 +205,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                 style={{
                   fontSize: '1.125rem',
                   lineHeight: 1.8,
-                  color: 'rgba(236, 72, 153, 0.9)',
+                  color: 'rgba(255, 255, 255, 0.9)',
                 }}
                 dangerouslySetInnerHTML={{ __html: content.content }}
               />
@@ -227,7 +224,7 @@ const ContentCard = ({ content, onNext, onComplete }) => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   fontSize: '0.875rem',
-                  color: 'rgba(236, 72, 153, 0.6)',
+                  color: 'rgba(255, 255, 255, 0.7)',
                 }}
               >
                 <span>Temps de lecture : {readingTime}s</span>

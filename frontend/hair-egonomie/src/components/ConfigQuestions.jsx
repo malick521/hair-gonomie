@@ -200,7 +200,7 @@ const ConfigQuestions = ({ onComplete }) => {
               <div
                 style={{
                   fontSize: '0.875rem',
-                  color: 'rgba(236, 72, 153, 0.7)',
+                  color: 'rgba(255, 255, 255, 0.8)',
                   fontWeight: 500,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
@@ -213,7 +213,7 @@ const ConfigQuestions = ({ onComplete }) => {
                 style={{
                   fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
                   fontWeight: 700,
-                  color: 'white',
+                  color: 'rgba(255, 255, 255, 0.95)',
                   marginBottom: '1rem',
                   letterSpacing: '-0.02em',
                   textShadow: '0 5px 20px rgba(236, 72, 153, 0.3)',
@@ -224,7 +224,7 @@ const ConfigQuestions = ({ onComplete }) => {
               <p
                 style={{
                   fontSize: '0.875rem',
-                  color: 'rgba(236, 72, 153, 0.7)',
+                  color: 'rgba(255, 255, 255, 0.75)',
                   fontStyle: 'italic',
                 }}
               >
